@@ -44,7 +44,7 @@ def purge_cloudflare_cache():
 
     try:
         response = requests.post(URL,headers=cf_headers,data=cf_data)
-    except Exception err:
+    except Exception as err:
         print("There was an issue calling cloudflare.")
     else:
         if response.status_code == 200 and response.json()['success']:
