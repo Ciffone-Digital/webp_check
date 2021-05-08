@@ -51,6 +51,7 @@ def purge_cloudflare_cache():
             print("cache has been purged.")
         else:
             print("cache has NOT been purged.")
+            print(f"{response.json()}")
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
