@@ -40,7 +40,7 @@ def convert2webp(f_image,webp_image):
 def purge_cloudflare_cache():
     URL = f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/purge_cache'
     cf_headers = {"Content-Type": "Application/json", "Authorization": f"Bearer {CF_API_TOKEN}"}
-    cf_data = {"purge_everything":"true"}
+    cf_data = '{"purge_everything":true}'
 
     try:
         response = requests.post(URL,headers=cf_headers,data=cf_data)
