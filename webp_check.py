@@ -96,7 +96,8 @@ def purge_cloudflare_cache():
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        webp_check(sys.argv[1])
+        #webp_check(sys.argv[1])
+        wp = wp_database(sys.argv[1])
     else:
         print("missing argument...")
         exit(1)
