@@ -4,10 +4,11 @@ import sys
 import os
 import requests
 from PIL import Image
-from config.tokens import CF_PURGE_CACHE,CF_ZONE_ID, CF_API_TOKEN
 from requests.exceptions import HTTPError, ConnectTimeout, ReadTimeout, SSLError
 from sqlalchemy import create_engine
 from wpconfigr.wp_config_file import WpConfigFile
+
+#from config.tokens import CF_PURGE_CACHE,CF_ZONE_ID, CF_API_TOKEN
 
 class wp_database:
 
