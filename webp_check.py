@@ -38,8 +38,9 @@ class wp_database:
 
     def test_func(self):
         with self.engine.connect() as conn:
-            result = conn.execute(str("select 'hello world'"))
-            print(result.all())
+            result = conn.execute(str('SELECT ID, post_content, post_content_filtered FROM wp_posts'))
+            for row in result:
+                print(f"{str(row.ID)} = '{row.post_content}'")
 
     def check_wp_posts_table(self):
         pass
