@@ -38,7 +38,7 @@ class wp_database:
 
     def test_func(self):
         with self.engine.connect() as conn:
-            result = conn.execute(text("select 'hello world'"))
+            result = conn.execute(str("select 'hello world'"))
             print(result.all())
 
     def check_wp_posts_table(self):
