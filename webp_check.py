@@ -98,6 +98,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         #webp_check(sys.argv[1])
         wp = wp_database(sys.argv[1])
+        print(wp.db_host + " " + wp.db_name)
     else:
         print("missing argument...")
         exit(1)
