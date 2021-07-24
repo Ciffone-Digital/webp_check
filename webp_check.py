@@ -6,6 +6,44 @@ import requests
 from PIL import Image
 from config.tokens import CF_PURGE_CACHE,CF_ZONE_ID, CF_API_TOKEN
 from requests.exceptions import HTTPError, ConnectTimeout, ReadTimeout, SSLError
+from sqlalchemy import create_engine
+from wpconfigr.wp_config_file import WpConfigFile
+
+class wp_database:
+
+    def __init__(self, wp_config):
+        wp_conf = WpConfigFile(wp_config)
+        hostinfo = wp_conf.get("DB_HOST")
+        
+        # gather hostname & port
+        if ":" in hostinfo:
+            hostinfo = hostinfo.split(":")
+            self.db_host = hostinfo[0]
+            self.db_port = int(hostinfo[1])
+        else:
+            self.db_host = hostinfo
+            self.db_port = 3306 # mysql default
+        
+        self.db_name = wp_conf.get("DB_NAME")
+        self.db_user = wp_conf.get("DB_USER")
+        self.db_pass = wp_conf.get("DB_PASS")
+
+        # initialize DB Engine variable
+        self.engine = None
+        
+    def create_db_engine(self):
+        if self.engine == None:
+            self.engine = create_engine(f"mysql+pymysql://{self.db_user}:{self.db_pass}@{self.db_host}:{str(self.db_port)}/{self.db_name}")
+
+    def check_wp_posts_table(self):
+        pass
+
+    def update_wp_posts_table(self):
+        pass
+        
+
+
+
 
 def webp_check(file_dir):
     if os.path.exists(file_dir) and os.path.isdir(file_dir):
@@ -36,6 +74,9 @@ def convert2webp(f_image,webp_image):
     im = Image.open(f_image).convert("RGB")
     im.save(webp_image,"webp")
     im.close()
+
+def update_database(): # this function will be used to update local images to webp.
+    pass
 
 def purge_cloudflare_cache():
     URL = f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/purge_cache'
