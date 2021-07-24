@@ -27,7 +27,7 @@ class wp_database:
         
         self.db_name = wp_conf.get("DB_NAME")
         self.db_user = wp_conf.get("DB_USER")
-        self.db_pass = wp_conf.get("DB_PASS")
+        self.db_pass = wp_conf.get("DB_PASSWORD")
 
         # initialize DB Engine variable
         self.engine = None
