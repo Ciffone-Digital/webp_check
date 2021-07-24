@@ -100,6 +100,7 @@ if __name__ == '__main__':
         #webp_check(sys.argv[1])
         wp = wp_database(sys.argv[1])
         print(wp.db_host + " " + wp.db_name)
+        wp.create_db_engine()
     else:
         print("missing argument...")
         exit(1)
