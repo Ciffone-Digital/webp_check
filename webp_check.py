@@ -106,6 +106,7 @@ if __name__ == '__main__':
         wp = wp_database(sys.argv[1])
         print(wp.db_host + " " + wp.db_name)
         wp.create_db_engine()
+        wp.test_func()
     else:
         print("missing argument...")
         exit(1)
