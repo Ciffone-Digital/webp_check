@@ -36,11 +36,16 @@ class wp_database:
         if self.engine == None:
             self.engine = create_engine(f"mysql+pymysql://{self.db_user}:{self.db_pass}@{self.db_host}:{str(self.db_port)}/{self.db_name}")
 
+    def test_func(self):
+        with self.engine.connect() as conn:
+            result = conn.execute(text("select 'hello world'"))
+            print(result.all())
+
     def check_wp_posts_table(self):
         pass
 
     def update_wp_posts_table(self):
-        pass
+        pass 
         
 
 
