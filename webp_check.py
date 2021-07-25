@@ -48,9 +48,11 @@ class wp_database:
         with self.engine.connect() as conn:
             result = conn.execute(str('SELECT ID, post_content FROM wp_posts'))
             img_dict = {}
+            incr = 0
             for row in result:
                 if '<img' in row.post_content:
-                    img_dict[str(row.ID)] = row.post_content
+                    img_dict[str(incr)] = {'ID' : row.ID, 'post_content' : row.post_content}
+                    incr+=1
 
             return img_dict
 
@@ -125,8 +127,8 @@ if __name__ == '__main__':
         posts = wp.check_wp_posts_table()
 
         for key,val in posts:
-            print(key)
-            print(convert_image_links(val))
+            print(val['ID'])
+            print(convert_image_links(val['post_content']))
             print()
     else:
         print("missing argument...")
