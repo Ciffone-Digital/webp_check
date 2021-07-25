@@ -50,7 +50,7 @@ class wp_database:
             img_dict = {}
             for row in result:
                 if '<img' in row.post_content:
-                    img_dict[row.ID] = row.post_content
+                    img_dict[str(row.ID)] = row.post_content
 
             return img_dict
 
@@ -125,7 +125,7 @@ if __name__ == '__main__':
         posts = wp.check_wp_posts_table()
 
         for key,val in posts:
-            print(str(key))
+            print(key)
             print(convert_image_links(val))
             print()
     else:
