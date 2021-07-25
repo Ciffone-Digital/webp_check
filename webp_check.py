@@ -92,14 +92,15 @@ def convert2webp(f_image,webp_image):
 def convert_image_links(post_content):
     # find image links and save to array
     links = re.findall(r'https?://staging\.ciffonedigital\.com[/|.|\w|\s|-]*\.(?:jpe?g|png)', post_content)
-    
-    # replace \.(jpg|jpeg|png) w/ .webp
 
-    # swap link in post content
-    #re.sub()
+    # replace \.(jpg|jpeg|png) w/ .webp
+    for l in links:
+        ext = l.split('.')[-1:][0]
+        new_link = l.replace(ext,'webp')
+        post_content.replace(l, new_link)
 
     # return post content 
-    return links
+    return post_content
 
 
 def purge_cloudflare_cache():
