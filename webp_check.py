@@ -49,7 +49,7 @@ class wp_database:
             img_dict = {}
             for row in result:
                 if '<img' in row.post_content:
-                    img_dict[row.id] = row.post_content
+                    img_dict[row.ID] = row.post_content
 
             return img_dict
 
