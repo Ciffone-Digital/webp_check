@@ -6,11 +6,11 @@ import requests
 import re
 from PIL import Image
 from requests.exceptions import HTTPError, ConnectTimeout, ReadTimeout, SSLError
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from wpconfigr.wp_config_file import WpConfigFile
 
 
-#from config.tokens import CF_PURGE_CACHE,CF_ZONE_ID, CF_API_TOKEN
+#from config.tokens import CF_PURGE_CACHE,CF_ZONE_ID,CF_API_TOKEN
 
 class wp_database:
 
@@ -40,13 +40,13 @@ class wp_database:
 
     def test_func(self):
         with self.engine.connect() as conn:
-            result = conn.execute(str('SELECT ID, post_content FROM wp_posts'))
+            result = conn.execute(text('SELECT ID, post_content FROM wp_posts'))
             for row in result:
                 print(f"{str(row.ID)} = '{row.post_content}'")
 
     def check_wp_posts_table(self):
         with self.engine.connect() as conn:
-            result = conn.execute(str('SELECT ID, post_content FROM wp_posts'))
+            result = conn.execute(text('SELECT ID, post_content FROM wp_posts'))
             img_dict = {}
             incr = 0
             for row in result:
@@ -56,8 +56,11 @@ class wp_database:
 
             return img_dict
 
-    def update_wp_posts_table(self):
-        pass 
+    def update_wp_posts_table(self, post_id, post_content):
+        stmt = text("UPDATE wp_posts SET post_content=:post_content WHERE ID=:ID").bindparams(post_content=post_content, ID=post_id)
+        with self.engine.connect() as conn:
+            conn.execute(stmt)
+            conn.commit()
 
 def webp_check(file_dir):
     if os.path.exists(file_dir) and os.path.isdir(file_dir):
@@ -80,7 +83,7 @@ def webp_check(file_dir):
                 webp_check(f_path)
 
         if purge_cache and CF_PURGE_CACHE:
-            purge_cloudflare_cache()
+            purge_cloudflare_cache(CF_ZONE_ID, CF_API_TOKEN)
     else:
         print(f"'{file_dir}' either doesn't exist, or is not a dir...")
 
@@ -103,9 +106,9 @@ def convert_image_links(post_content):
     return post_content
 
 
-def purge_cloudflare_cache():
-    URL = f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/purge_cache'
-    cf_headers = {"Content-Type": "Application/json", "Authorization": f"Bearer {CF_API_TOKEN}"}
+def purge_cloudflare_cache(cf_zone_id, cf_api_token):
+    URL = f'https://api.cloudflare.com/client/v4/zones/{cf_zone_id}/purge_cache'
+    cf_headers = {"Content-Type": "Application/json", "Authorization": f"Bearer {cf_api_token}"}
     cf_data = '{"purge_everything":true}'
 
     try:
@@ -119,6 +122,9 @@ def purge_cloudflare_cache():
             print("cache has NOT been purged.")
             print(f"{response.json()}")
 
+def run_main():
+    pass
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         #webp_check(sys.argv[1])
@@ -128,9 +134,9 @@ if __name__ == '__main__':
         posts = wp.check_wp_posts_table()
 
         for key in posts:
-            print(posts[key]['ID'])
-            print(convert_image_links(posts[key]['post_content']))
-            print()
+            # update post with webp links.
+            wp.update_wp_posts_table(posts[key]['ID'], convert_image_links(posts[key]['post_content']))
+            print(f"updated post ID: {str(posts[key]['ID'])}")
     else:
         print("missing argument...")
         exit(1)
