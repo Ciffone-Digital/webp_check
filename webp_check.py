@@ -60,7 +60,7 @@ class wp_database:
         stmt = text("UPDATE wp_posts SET post_content=:post_content WHERE ID=:ID").bindparams(post_content=post_content, ID=post_id)
         with self.engine.connect() as conn:
             conn.execute(stmt)
-            conn.commit()
+            #conn.commit()
 
 def webp_check(file_dir):
     if os.path.exists(file_dir) and os.path.isdir(file_dir):
