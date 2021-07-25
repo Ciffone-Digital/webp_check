@@ -126,9 +126,9 @@ if __name__ == '__main__':
         wp.create_db_engine()
         posts = wp.check_wp_posts_table()
 
-        for key,val in posts:
-            print(val['ID'])
-            print(convert_image_links(val['post_content']))
+        for key in posts:
+            print(posts[key]['ID'])
+            print(convert_image_links(posts[key]['post_content']))
             print()
     else:
         print("missing argument...")
