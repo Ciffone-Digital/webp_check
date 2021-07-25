@@ -97,7 +97,7 @@ def convert_image_links(post_content):
     for l in links:
         ext = l.split('.')[-1:][0]
         new_link = l.replace(ext,'webp')
-        post_content.replace(l, new_link)
+        post_content = post_content.replace(l, new_link)
 
     # return post content 
     return post_content
