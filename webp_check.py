@@ -91,7 +91,7 @@ def convert2webp(f_image,webp_image):
 
 def convert_image_links(post_content):
     # find image links and save to array
-    links = re.findall(r'(http(s?)://)(staging\.ciffonedigital\.com)([/|.|\w|\s|-])*\.(?:jpe?g|png)', post_content)
+    links = re.findall(r'https?://staging\.ciffonedigital\.com[/|.|\w|\s|-]*\.(?:jpe?g|png)', post_content)
     
     # replace \.(jpg|jpeg|png) w/ .webp
 
