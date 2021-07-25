@@ -3,6 +3,7 @@
 import sys
 import os
 import requests
+import re
 from PIL import Image
 from requests.exceptions import HTTPError, ConnectTimeout, ReadTimeout, SSLError
 from sqlalchemy import create_engine
@@ -55,10 +56,6 @@ class wp_database:
 
     def update_wp_posts_table(self):
         pass 
-        
-
-
-
 
 def webp_check(file_dir):
     if os.path.exists(file_dir) and os.path.isdir(file_dir):
@@ -90,8 +87,18 @@ def convert2webp(f_image,webp_image):
     im.save(webp_image,"webp")
     im.close()
 
-def update_database(): # this function will be used to update local images to webp.
-    pass
+def convert_image_links(post_content):
+    # find image links and save to array
+    links = re.findall(r'(http(s?)://)(staging\.ciffonedigital\.com)([/|.|\w|\s|-])*\.(?:jpe?g|png)', post_content)
+    
+    # replace \.(jpg|jpeg|png) w/ .webp
+
+    # swap link in post content
+    #re.sub()
+
+    # return post content 
+    return links
+
 
 def purge_cloudflare_cache():
     URL = f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/purge_cache'
@@ -117,7 +124,10 @@ if __name__ == '__main__':
         wp.create_db_engine()
         posts = wp.check_wp_posts_table()
 
-        print(posts)
+        for key,val in posts:
+            print(str(key))
+            print(convert_image_links(val))
+            print()
     else:
         print("missing argument...")
         exit(1)
