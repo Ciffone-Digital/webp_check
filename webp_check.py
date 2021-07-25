@@ -8,6 +8,7 @@ from requests.exceptions import HTTPError, ConnectTimeout, ReadTimeout, SSLError
 from sqlalchemy import create_engine
 from wpconfigr.wp_config_file import WpConfigFile
 
+
 #from config.tokens import CF_PURGE_CACHE,CF_ZONE_ID, CF_API_TOKEN
 
 class wp_database:
@@ -38,12 +39,19 @@ class wp_database:
 
     def test_func(self):
         with self.engine.connect() as conn:
-            result = conn.execute(str('SELECT ID, post_content, post_content_filtered FROM wp_posts'))
+            result = conn.execute(str('SELECT ID, post_content FROM wp_posts'))
             for row in result:
                 print(f"{str(row.ID)} = '{row.post_content}'")
 
     def check_wp_posts_table(self):
-        pass
+        with self.engine.connect() as conn:
+            result = conn.execute(str('SELECT ID, post_content FROM wp_posts'))
+            img_dict = {}
+            for row in result:
+                if '<img' in row.post_content:
+                    id_dict[row.id] = row.post_content
+
+            return img_dict
 
     def update_wp_posts_table(self):
         pass 
@@ -107,7 +115,9 @@ if __name__ == '__main__':
         wp = wp_database(sys.argv[1])
         print(wp.db_host + " " + wp.db_name)
         wp.create_db_engine()
-        wp.test_func()
+        posts = wp.check_wp_posts_table()
+
+        print(posts)
     else:
         print("missing argument...")
         exit(1)
