@@ -38,12 +38,6 @@ class wp_database:
         if self.engine == None:
             self.engine = create_engine(f"mysql+pymysql://{self.db_user}:{self.db_pass}@{self.db_host}:{str(self.db_port)}/{self.db_name}")
 
-    def test_func(self):
-        with self.engine.connect() as conn:
-            result = conn.execute(text('SELECT ID, post_content FROM wp_posts'))
-            for row in result:
-                print(f"{str(row.ID)} = '{row.post_content}'")
-
     def check_wp_posts_table(self):
         with self.engine.connect() as conn:
             result = conn.execute(text('SELECT ID, post_content FROM wp_posts'))
@@ -60,7 +54,10 @@ class wp_database:
         stmt = text("UPDATE wp_posts SET post_content=:post_content WHERE ID=:ID").bindparams(post_content=post_content, ID=post_id)
         with self.engine.connect() as conn:
             conn.execute(stmt)
-            #conn.commit()
+
+    def check_wp_postmeta_table(self):
+        pass
+
 
 def webp_check(file_dir):
     if os.path.exists(file_dir) and os.path.isdir(file_dir):
